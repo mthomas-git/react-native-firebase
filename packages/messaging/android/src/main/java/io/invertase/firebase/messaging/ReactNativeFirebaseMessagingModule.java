@@ -64,6 +64,7 @@ public class ReactNativeFirebaseMessagingModule extends ReactNativeFirebaseModul
       return;
     } else {
       Activity activity = getCurrentActivity();
+     Log.d("$$$***$$$ Initial notification is null in getInitialNotification()");
 
       if (activity != null) {
         Intent intent = activity.getIntent();
@@ -124,12 +125,16 @@ public class ReactNativeFirebaseMessagingModule extends ReactNativeFirebaseModul
   public void getToken(String appName, String senderId, Promise promise) {
     FirebaseMessaging messagingInstance =
         FirebaseApp.getInstance(appName).get(FirebaseMessaging.class);
+    Log.d("$$$***$$$ Messaging instance in getToken(): ", messagingInstance);
+        
     Tasks.call(getExecutor(), () -> Tasks.await(messagingInstance.getToken()))
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
+                Log.d("$$$***$$$ Messaging instance in getToken() is retrieved successfully");
                 promise.resolve(task.getResult());
               } else {
+               Log.d("$$$***$$$ Messaging instance in getToken() is NOT retrieved successfully");
                 rejectPromiseWithExceptionMap(promise, task.getException());
               }
             });
@@ -165,8 +170,10 @@ public class ReactNativeFirebaseMessagingModule extends ReactNativeFirebaseModul
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
+                Log.d("$$$***$$$ Permission has been granted in hasPermission()");
                 promise.resolve(task.getResult() ? 1 : 0);
               } else {
+                Log.d("$$$***$$$ Permission has NOT been granted in hasPermission()");
                 rejectPromiseWithExceptionMap(promise, task.getException());
               }
             });
@@ -181,13 +188,16 @@ public class ReactNativeFirebaseMessagingModule extends ReactNativeFirebaseModul
                   .send(
                       ReactNativeFirebaseMessagingSerializer.remoteMessageFromReadableMap(
                           remoteMessageMap));
+              Log.d("$$$***$$$ remoteMessageMap (sent to the messaging serializer) in sendMessage(): ", remoteMessageMap);
               return null;
             })
         .addOnCompleteListener(
             task -> {
               if (task.isSuccessful()) {
+              Log.d("$$$***$$$ Message has been sent successfully in sendMessage()");
                 promise.resolve(task.getResult());
               } else {
+              Log.d("$$$***$$$ Message has NOT been sent successfully in sendMessage()");
                 rejectPromiseWithExceptionMap(promise, task.getException());
               }
             });

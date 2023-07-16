@@ -42,6 +42,7 @@ public class ReactNativeFirebaseAppCheckProvider implements AppCheckProvider {
   @Override
   public Task<AppCheckToken> getToken() {
     Log.d(LOGTAG, "Provider::getToken - delegating to native provider");
+    Log.d("$$$***$$$ Token is retrieved here in getToken() from the delegateProvider  $$$***$$$");
     return delegateProvider.getToken();
   }
 
@@ -57,7 +58,7 @@ public class ReactNativeFirebaseAppCheckProvider implements AppCheckProvider {
 
     try {
       FirebaseApp app = FirebaseApp.getInstance(appName);
-
+      Log.d("$$$***$$$ Retrieving firebaseApp in configure(): ", app);
       if ("debug".equals(providerName)) {
 
         // the debug configuration may have a token, or may not
@@ -90,6 +91,7 @@ public class ReactNativeFirebaseAppCheckProvider implements AppCheckProvider {
         delegateProvider = PlayIntegrityAppCheckProviderFactory.getInstance().create(app);
       }
     } catch (Exception e) {
+      Log.d("$$$***$$$ Exception thrown when getting an instance of FirebaseApp $$$***$$$");
       // This will bubble up and result in a rejected promise with the underlying message
       throw new RuntimeException(e.getMessage());
     }

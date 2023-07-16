@@ -120,10 +120,12 @@ class FirebaseAppCheckModule extends FirebaseModule {
   }
 
   setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled) {
+    console.log('$$$***$$$ Token auto refresh enabled here $$$***$$$');
     this.native.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
   }
 
   getToken(forceRefresh) {
+    console.log('$$$***$$$ forceRefresh happens here. The value is: ', forceRefresh);
     if (!forceRefresh) {
       return this.native.getToken(false);
     } else {
@@ -134,9 +136,11 @@ class FirebaseAppCheckModule extends FirebaseModule {
   onTokenChanged() {
     // iOS does not provide any native listening feature
     if (isIOS) {
+      console.log('$$$***$$$ Token has been changed here $$$***$$$');
       return () => {};
     }
     // TODO unimplemented on Android
+    console.log('$$$***$$$ Token has been changed here $$$***$$$');
     return () => {};
   }
 }

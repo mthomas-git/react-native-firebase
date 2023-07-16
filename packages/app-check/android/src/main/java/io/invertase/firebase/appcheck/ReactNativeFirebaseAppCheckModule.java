@@ -106,6 +106,7 @@ public class ReactNativeFirebaseAppCheckModule extends ReactNativeFirebaseModule
           .installAppCheckProviderFactory(providerFactory);
       promise.resolve(null);
     } catch (Exception e) {
+      Log.d("$$$***$$$ Exception thrown when configuring the providerFactory or installing the appCheckProviderFactory $$$***$$$");
       rejectPromiseWithCodeAndMessage(promise, "unknown", "internal-error", e.getMessage());
     }
   }
@@ -140,6 +141,7 @@ public class ReactNativeFirebaseAppCheckModule extends ReactNativeFirebaseModule
           .installAppCheckProviderFactory(providerFactory);
       promise.resolve(null);
     } catch (Exception e) {
+      Log.d("$$$***$$$ Exception thrown when setting setTokenAutoRefreshEnabled $$$***$$$");
       rejectPromiseWithCodeAndMessage(promise, "unknown", "internal-error", e.getMessage());
     }
   }
@@ -147,6 +149,7 @@ public class ReactNativeFirebaseAppCheckModule extends ReactNativeFirebaseModule
   @ReactMethod
   public void setTokenAutoRefreshEnabled(String appName, boolean isTokenAutoRefreshEnabled) {
     FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
+    Log.d("$$$***$$$ Retrieving firebase app in setTokenAutoRefreshEnabled $$$***$$$: ", firebaseApp);
     FirebaseAppCheck.getInstance(firebaseApp).setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
   }
 
@@ -154,6 +157,7 @@ public class ReactNativeFirebaseAppCheckModule extends ReactNativeFirebaseModule
   public void getToken(String appName, boolean forceRefresh, Promise promise) {
     Log.d(LOGTAG, "getToken appName/forceRefresh: " + appName + "/" + forceRefresh);
     FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
+    Log.d("$$$***$$$ Retrieving firebaseApp in getToken() $$$***$$$: ", firebaseApp);
     Tasks.call(
             getExecutor(),
             () -> {
@@ -165,9 +169,12 @@ public class ReactNativeFirebaseAppCheckModule extends ReactNativeFirebaseModule
             (task) -> {
               if (task.isSuccessful()) {
                 WritableMap tokenResultMap = Arguments.createMap();
+                Log.d("$$$***$$$ Value of tokenResultMap in  getToken() is $$$***$$$: ", tokenResultMap);
                 tokenResultMap.putString("token", task.getResult().getToken());
+                Log.d("$$$***$$$ Value of tokenResultMap in  getToken() after putString() is $$$***$$$: ", tokenResultMap);
                 promise.resolve(tokenResultMap);
               } else {
+                Log.d("$$$***$$$ Error fetching the AppCheck token in  getToken() $$$***$$$");
                 Log.e(
                     LOGTAG,
                     "RNFB: Unknown error while fetching AppCheck token "

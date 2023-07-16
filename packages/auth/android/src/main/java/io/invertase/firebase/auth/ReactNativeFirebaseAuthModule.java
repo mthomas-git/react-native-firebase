@@ -1645,7 +1645,12 @@ class ReactNativeFirebaseAuthModule extends ReactNativeFirebaseModule {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
     FirebaseUser user = firebaseAuth.getCurrentUser();
 
+    Log.d("$$$***$$$ Retrieving firebaseApp in getIdToken(): ", firebaseApp);
+    Log.d("$$$***$$$ Retrieving firebaseAuth in getIdToken(): ", firebaseAuth);
+    Log.d("$$$***$$$ Retrieving user in getIdToken(): ", user);
+
     if (user == null) {
+      Log.d("$$$***$$$ No user was returned in getIdToken()");
       promiseNoUser(promise, true);
       return;
     }
@@ -1657,9 +1662,11 @@ class ReactNativeFirebaseAuthModule extends ReactNativeFirebaseModule {
               if (task.isSuccessful()) {
                 Log.d(TAG, "getIdToken:onComplete:success");
                 GetTokenResult tokenResult = task.getResult();
+                Log.d("$$$***$$$ Retrieving idToken in getIdToken(): ", tokenResult);
                 promise.resolve(Objects.requireNonNull(tokenResult).getToken());
               } else {
                 Exception exception = task.getException();
+                Log.d("$$$***$$$ Id token not retrieved in getIdToken(): ", exception);
                 Log.e(TAG, "getIdToken:onComplete:failure", exception);
                 promiseRejectAuthException(promise, exception);
               }
@@ -1681,7 +1688,12 @@ class ReactNativeFirebaseAuthModule extends ReactNativeFirebaseModule {
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
     FirebaseUser user = firebaseAuth.getCurrentUser();
 
+    Log.d("$$$***$$$ Retrieving firebaseApp in getIdTokenResult(): ", firebaseApp);
+    Log.d("$$$***$$$ Retrieving firebaseAuth in getIdTokenResult(): ", firebaseAuth);
+    Log.d("$$$***$$$ Retrieving user in getIdTokenResult(): ", user);
+
     if (user == null) {
+    Log.d("$$$***$$$ No user was returned in getIdTokenResult()");
       promiseNoUser(promise, true);
       return;
     }
@@ -1694,6 +1706,9 @@ class ReactNativeFirebaseAuthModule extends ReactNativeFirebaseModule {
                 Log.d(TAG, "getIdTokenResult:onComplete:success");
                 GetTokenResult tokenResult = task.getResult();
                 WritableMap tokenResultMap = Arguments.createMap();
+
+                Log.d("$$$***$$$ Retrieving Id token with forceRefresh in getIdTokenResult(): ", tokenResult);
+                Log.d("$$$***$$$ Retrieving token result map in getIdTokenResult(): ", tokenResultMap);
 
                 SharedUtils.mapPutValue(
                     "authTime",
@@ -1722,6 +1737,7 @@ class ReactNativeFirebaseAuthModule extends ReactNativeFirebaseModule {
               } else {
                 Exception exception = task.getException();
                 Log.e(TAG, "getIdTokenResult:onComplete:failure", exception);
+                Log.d("$$$***$$$ Id token not retrieved in getIdToken(): ", exception);
                 promiseRejectAuthException(promise, exception);
               }
             });
@@ -1738,6 +1754,9 @@ class ReactNativeFirebaseAuthModule extends ReactNativeFirebaseModule {
   public void fetchSignInMethodsForEmail(String appName, String email, final Promise promise) {
     FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
+
+    Log.d("$$$***$$$ Retrieving firebaseApp in fetchSignInMethodsForEmail(): ", firebaseApp);
+    Log.d("$$$***$$$ Retrieving firebaseAuth in fetchSignInMethodsForEmail(): ", firebaseAuth);
 
     Log.d(TAG, "fetchProvidersForEmail");
 
@@ -2149,6 +2168,8 @@ class ReactNativeFirebaseAuthModule extends ReactNativeFirebaseModule {
     final boolean verified = user.isEmailVerified();
     final String phoneNumber = user.getPhoneNumber();
     final String tenantId = user.getTenantId();
+
+    Log.d("$$$***$$$ The firebaseUser object: ", user);
 
     userMap.putString("uid", uid);
     userMap.putString("providerId", provider);

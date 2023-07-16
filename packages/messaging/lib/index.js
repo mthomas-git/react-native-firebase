@@ -198,10 +198,12 @@ class FirebaseMessagingModule extends FirebaseModule {
 
   getToken({ appName, senderId } = {}) {
     if (!isUndefined(appName) && !isString(appName)) {
+      console.log("firebase.messaging().getToken(*) 'appName' expected a string.");
       throw new Error("firebase.messaging().getToken(*) 'appName' expected a string.");
     }
 
     if (!isUndefined(senderId) && !isString(senderId)) {
+      console.log("firebase.messaging().getToken(*) 'senderId' expected a string.");
       throw new Error("firebase.messaging().getToken(*) 'senderId' expected a string.");
     }
 
@@ -228,6 +230,7 @@ class FirebaseMessagingModule extends FirebaseModule {
 
   onMessage(listener) {
     if (!isFunction(listener)) {
+      console.log("firebase.messaging().onMessage(*) 'listener' expected a function.");
       throw new Error("firebase.messaging().onMessage(*) 'listener' expected a function.");
     }
 
@@ -248,6 +251,7 @@ class FirebaseMessagingModule extends FirebaseModule {
 
   onTokenRefresh(listener) {
     if (!isFunction(listener)) {
+      console.log("firebase.messaging().onTokenRefresh(*) 'listener' expected a function.");
       throw new Error("firebase.messaging().onTokenRefresh(*) 'listener' expected a function.");
     }
 
@@ -282,11 +286,15 @@ class FirebaseMessagingModule extends FirebaseModule {
     }
 
     if (!isObject(permissions)) {
+      console.log('firebase.messaging().requestPermission(*) expected an object value.');
       throw new Error('firebase.messaging().requestPermission(*) expected an object value.');
     }
 
     Object.entries(permissions).forEach(([key, value]) => {
       if (!hasOwnProperty(defaultPermissions, key)) {
+        console.log(
+          `firebase.messaging().requestPermission(*) unexpected key "${key}" provided to permissions object.`,
+        );
         throw new Error(
           `firebase.messaging().requestPermission(*) unexpected key "${key}" provided to permissions object.`,
         );
@@ -338,7 +346,13 @@ class FirebaseMessagingModule extends FirebaseModule {
     if (isAndroid) {
       return Promise.resolve(null);
     }
-    return this.native.getAPNSToken();
+    try {
+      const token = this.native.getAPNSToken();
+      console.log('token successfuly retrieved in getAPNSToken(): ', token);
+      return token;
+    } catch (e) {
+      console.log('get APNS Token in getAPNSToken() failed with exception: ', e);
+    }
   }
 
   /**
@@ -346,10 +360,14 @@ class FirebaseMessagingModule extends FirebaseModule {
    */
   setAPNSToken(token, type) {
     if (isUndefined(token) || !isString(token)) {
+      console.log("firebase.messaging().setAPNSToken(*) 'token' expected a string value.");
       throw new Error("firebase.messaging().setAPNSToken(*) 'token' expected a string value.");
     }
 
     if (!isUndefined(type) && (!isString(type) || !['prod', 'sandbox', 'unknown'].includes(type))) {
+      console.log(
+        "firebase.messaging().setAPNSToken(*) 'type' expected one of 'prod', 'sandbox', or 'unknown'.",
+      );
       throw new Error(
         "firebase.messaging().setAPNSToken(*) 'type' expected one of 'prod', 'sandbox', or 'unknown'.",
       );
@@ -358,12 +376,21 @@ class FirebaseMessagingModule extends FirebaseModule {
     if (isAndroid) {
       return Promise.resolve(null);
     }
-
+    console.log('APNS token is set here');
     return this.native.setAPNSToken(token, type);
   }
 
   hasPermission() {
-    return this.native.hasPermission();
+    try {
+      const permission = this.native.hasPermission();
+      console.log('permission successfully granted in hasPermission(): ', permission);
+      return permission;
+    } catch (e) {
+      console.log(
+        'permission NOT successfuly granted in hasPermission(), and failed with exception: ',
+        e,
+      );
+    }
   }
 
   // https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessagingService.html#public-void-ondeletedmessages-
@@ -379,6 +406,7 @@ class FirebaseMessagingModule extends FirebaseModule {
   // https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessagingService.html#onMessageSent(java.lang.String)
   onMessageSent(listener) {
     if (!isFunction(listener)) {
+      console.log("firebase.messaging().onMessageSent(*) 'listener' expected a function.");
       throw new Error("firebase.messaging().onMessageSent(*) 'listener' expected a function.");
     }
 
